@@ -1,0 +1,102 @@
+openapi: 3.0.0
+info:
+  title: StackOverflow Clone
+  description: StackOverflow is a platform for developers to learn from one another by asking questions and providing answers. This project is a mini clone of the actual StackOverflow at this site [https://stackoverflow.com/](https://stackoverflow.com/)
+
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+
+externalDocs:
+  description: Checkout the GitHub repo
+  url: https://github.com/Ukhu/stack-overflow-clone
+
+servers:
+- url: /api/v1
+  description: Local host
+
+tags:
+- name: Auth
+  description: Authentication operations
+
+paths:
+  /auth/signup:
+    post:
+      tags:
+        - Auth
+      summary: Sign up
+      description: Creates a new user in the database
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                displayName:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        201:
+          description: successfully created user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: successfully created user!
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      email:
+                        type: string
+                      displayName:
+                        type: string
+                      token:
+                        type: string
+        400:
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: object
+                    properties:
+                      body:
+                        type: object
+                        properties:
+                          email:
+                            type: string
+                            example: must be a valid email
+                          displayName:
+                            type: string
+                            example: displayName must be alphanumeric
+        409:
+          description: resource already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: string
+                    example: a user with the given email already exists
+        500:
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: string
+                    example: error occured!

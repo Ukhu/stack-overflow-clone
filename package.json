@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start:dev": "cross-env DEBUG=dev nodemon --exec babel-node ./src/index.js",
-    "test": "cross-env NODE_ENV=test nyc --require @babel/register mocha --recursive tests --timeout 20000 --exit"
+    "test": "cross-env NODE_ENV=test nyc mocha --require @babel/register --recursive tests --timeout 20000 --exit",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
     "type": "git",
@@ -18,11 +19,18 @@
   },
   "homepage": "https://github.com/Ukhu/stack-overflow-clone#readme",
   "dependencies": {
+    "@babel/polyfill": "^7.6.0",
+    "bcrypt": "^3.0.6",
     "cors": "^2.8.5",
     "debug": "^4.1.1",
     "dotenv": "^8.1.0",
     "express": "^4.17.1",
-    "mongoose": "^5.7.3"
+    "express-validator": "^6.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.7.3",
+    "mongoose-timestamp": "^0.6.0",
+    "swagger-ui-express": "^4.1.1",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.2",
@@ -32,12 +40,15 @@
     "@babel/register": "^7.6.2",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
+    "coveralls": "^3.0.6",
     "cross-env": "^6.0.3",
     "eslint": "^6.5.1",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
     "mocha": "^6.2.1",
+    "mocha-lcov-reporter": "^1.3.0",
     "nodemon": "^1.19.3",
-    "nyc": "^14.1.1"
+    "nyc": "^14.1.1",
+    "sinon": "^7.5.0"
   }
 }

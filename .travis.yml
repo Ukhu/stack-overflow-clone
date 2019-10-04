@@ -1,0 +1,16 @@
+language: node_js
+node_js:
+  - "stable"
+install: npm install
+
+services:
+  - mongodb
+
+cache:
+  directories:
+    - "node_modules"
+
+script: npm run test
+
+after_success:
+  - npm run coverage
