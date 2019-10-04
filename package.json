@@ -4,7 +4,8 @@
   "description": "simple clone of stackoverflow with basic features",
   "main": "index.js",
   "scripts": {
-    "start:dev": "cross-env DEBUG=dev nodemon --exec babel-node ./src/index.js"
+    "start:dev": "cross-env DEBUG=dev nodemon --exec babel-node ./src/index.js",
+    "test": "cross-env NODE_ENV=test nyc --require @babel/register mocha --recursive tests --timeout 20000 --exit"
   },
   "repository": {
     "type": "git",
@@ -29,10 +30,14 @@
     "@babel/node": "^7.6.2",
     "@babel/preset-env": "^7.6.2",
     "@babel/register": "^7.6.2",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "cross-env": "^6.0.3",
     "eslint": "^6.5.1",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",
-    "nodemon": "^1.19.3"
+    "mocha": "^6.2.1",
+    "nodemon": "^1.19.3",
+    "nyc": "^14.1.1"
   }
 }

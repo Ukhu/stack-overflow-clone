@@ -17,6 +17,14 @@ app.use(urlencoded({ extended: true }));
 app.use(json());
 app.use(cors());
 
+app.get('/', (req, res) => {
+  res.status(200).send('Welcome to StackOverflow clone');
+});
+
+app.use('*', (req, res) => {
+  res.status(404).send('This route does not exist, kindly visit the root route at "/"');
+});
+
 app.listen(PORT, () => {
   mongoose.connect(DB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 });
@@ -28,3 +36,5 @@ db.on('error', (err) => log(err));
 db.once('open', () => {
   log(`Server started on port ${PORT} and database connection successful`);
 });
+
+export default app;
