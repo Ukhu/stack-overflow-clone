@@ -4,7 +4,7 @@
   "description": "simple clone of stackoverflow with basic features",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:dev": "cross-env DEBUG=dev nodemon --exec babel-node ./src/index.js"
   },
   "repository": {
     "type": "git",
@@ -16,14 +16,23 @@
     "url": "https://github.com/Ukhu/stack-overflow-clone/issues"
   },
   "homepage": "https://github.com/Ukhu/stack-overflow-clone#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "debug": "^4.1.1",
+    "dotenv": "^8.1.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.7.3"
+  },
   "devDependencies": {
     "@babel/cli": "^7.6.2",
     "@babel/core": "^7.6.2",
     "@babel/node": "^7.6.2",
     "@babel/preset-env": "^7.6.2",
     "@babel/register": "^7.6.2",
+    "cross-env": "^6.0.3",
     "eslint": "^6.5.1",
     "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-plugin-import": "^2.18.2"
+    "eslint-plugin-import": "^2.18.2",
+    "nodemon": "^1.19.3"
   }
 }
