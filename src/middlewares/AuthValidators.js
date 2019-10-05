@@ -1,7 +1,11 @@
 import helpers from '../helpers';
 import validationErrorHandler from './validationErrorHandler';
 
-const { Validators: { checkDisplayName, checkEmail, checkPassword } } = helpers;
+const {
+  Validators: {
+    checkDisplayName, checkEmail, checkPassword, genericCheck
+  }
+} = helpers;
 
 /**
  * @class AuthValidators
@@ -18,6 +22,19 @@ export default class AuthValidators {
       checkDisplayName(),
       checkEmail(),
       checkPassword(),
+      validationErrorHandler
+    ];
+  }
+
+  /**
+   * @method loginValidators
+   * @description validates the login fields
+   * @returns {array} of validation middlewares
+   */
+  static loginValidators() {
+    return [
+      checkEmail(),
+      genericCheck('password'),
       validationErrorHandler
     ];
   }

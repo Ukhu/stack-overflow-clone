@@ -13,5 +13,17 @@ export default {
     displayName: '',
     email: 'eden@gmail',
     password: '123'
+  },
+  loginUser: {
+    email: 'eden@gmail.com',
+    password: 'eden1234'
+  },
+  nonExistentEmail: {
+    email: 'xdfbhjbef@gmail.com',
+    password: 'eden1234'
+  },
+  wrongPassword: {
+    email: 'eden@gmail.com',
+    password: 'wrongPassword123'
   }
 };

@@ -100,3 +100,80 @@ paths:
                   error:
                     type: string
                     example: error occured!
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login
+      description: Logs in an existing user to the application
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: request successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: login successful!
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      email:
+                        type: string
+                      displayName:
+                        type: string
+                      token:
+                        type: string
+        400:
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: object
+                    properties:
+                      body:
+                        type: object
+                        properties:
+                          email:
+                            type: string
+                            example: must be a valid email
+                          password:
+                            type: string
+                            example: password is required
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: string
+                    example: email or password is incorrect
+        500:
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: string
+                    example: error occured!
