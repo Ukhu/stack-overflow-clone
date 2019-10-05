@@ -8,13 +8,19 @@ import mocks from '../__mocks__';
 chai.use(chaiHttp);
 
 const { User } = models;
-const { mockUser: { newUser, sameEmailUser, invalidInputUser } } = mocks;
+const {
+  mockUser: {
+    newUser, sameEmailUser, invalidInputUser,
+    loginUser, nonExistentEmail, wrongPassword
+  }
+} = mocks;
 
 const BASE_URL = '/api/v1/auth';
 const SIGNUP_URL = `${BASE_URL}/signup`;
+const LOGIN_URL = `${BASE_URL}/login`;
 
 describe('Auth routes', () => {
-  describe('Signup GET "/signup"', () => {
+  describe('Signup POST "/signup"', () => {
     it('should successfully sign a user up', (done) => {
       chai.request(app)
         .post(SIGNUP_URL)
@@ -63,6 +69,61 @@ describe('Auth routes', () => {
       chai.request(app)
         .post(SIGNUP_URL)
         .send(newUser)
+        .end((error, response) => {
+          expect(response).to.have.status(500);
+          expect(response.body).to.be.an('object');
+          expect(response.body.error).to.equal('error occured!');
+          stub.restore();
+          done();
+        });
+    });
+  });
+
+  describe('Login POST "/login"', () => {
+    it('should successfully log a user in', (done) => {
+      chai.request(app)
+        .post(LOGIN_URL)
+        .send(loginUser)
+        .end((error, response) => {
+          const { status, body } = response;
+          expect(status).to.equal(200);
+          expect(body.message).to.equal('login successful');
+          expect(body.data).to.be.an('object');
+          expect(body.data.email).to.equal(newUser.email);
+          done();
+        });
+    });
+
+    it('should not accept a non-existent email', (done) => {
+      chai.request(app)
+        .post(LOGIN_URL)
+        .send(nonExistentEmail)
+        .end((error, response) => {
+          const { status, body } = response;
+          expect(status).to.equal(401);
+          expect(body.error).to.equal('email or password is incorrect');
+          done();
+        });
+    });
+
+    it('should not accept a wrong password', (done) => {
+      chai.request(app)
+        .post(LOGIN_URL)
+        .send(wrongPassword)
+        .end((error, response) => {
+          const { status, body } = response;
+          expect(status).to.equal(401);
+          expect(body.error).to.equal('email or password is incorrect');
+          done();
+        });
+    });
+
+    it('should return a failure response if a server error occurs', (done) => {
+      const stub = sinon.stub(User, 'findOne');
+      stub.throws(new Error('error occured!'));
+      chai.request(app)
+        .post(LOGIN_URL)
+        .send(loginUser)
         .end((error, response) => {
           expect(response).to.have.status(500);
           expect(response.body).to.be.an('object');

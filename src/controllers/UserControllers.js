@@ -16,7 +16,7 @@ export default class UserControllers {
    * @description creates a new User in the database
    * @param {object} request
    * @param {object} response
-   * @returns {json} of validation middlewares
+   * @returns {json} of user object
    */
   static async signup(request, response) {
     const { displayName, email, password } = request.body;
@@ -40,6 +40,37 @@ export default class UserControllers {
           id: newUser.id,
           email: newUser.email,
           displayName: newUser.displayName,
+          token
+        }
+      });
+    } catch (error) {
+      responseMessage(response, 500, {
+        error: error.message
+      });
+    }
+  }
+
+  /**
+   * @method login
+   * @description logs an existing user
+   * @param {object} request
+   * @param {object} response
+   * @returns {json} user object
+   */
+  static async login(request, response) {
+    const { email, password } = request.body;
+    try {
+      const user = await User.findOne({ email });
+      let match;
+      if (user) match = await bcrypt.compare(password, user.password);
+      if (!user || !match) return responseMessage(response, 401, { error: 'email or password is incorrect' });
+      const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY, { expiresIn: '24h' });
+      responseMessage(response, 200, {
+        message: 'login successful',
+        data: {
+          id: user.id,
+          email: user.email,
+          displayName: user.displayName,
           token
         }
       });
