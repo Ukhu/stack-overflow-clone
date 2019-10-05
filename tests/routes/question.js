@@ -11,6 +11,7 @@ const { User, Question } = models;
 const {
   mockQuestion: {
     newQuestion,
+    newQuestion2,
     shortTitleAndBody,
     nonArrayTags
   },
@@ -47,6 +48,21 @@ describe('Question routes', () => {
           expect(body.message).to.equal('successfully asked a question!');
           expect(body.data).to.be.an('object');
           expect(body.data.title).to.equal(newQuestion.title);
+          done();
+        });
+    });
+
+    it('should successfully post a question without a tag', (done) => {
+      chai.request(app)
+        .post(QUESTION_URL)
+        .set('authorization', userToken)
+        .send(newQuestion2)
+        .end((error, response) => {
+          const { status, body } = response;
+          expect(status).to.equal(201);
+          expect(body.message).to.equal('successfully asked a question!');
+          expect(body.data).to.be.an('object');
+          expect(body.data.title).to.equal(newQuestion2.title);
           done();
         });
     });

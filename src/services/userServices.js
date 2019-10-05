@@ -7,7 +7,6 @@ const { User } = models;
  * @param {string} param
  * @returns {object} a user object
  */
-
 const findUser = async (param) => {
   const field = (/@/g.test(param)) ? { email: param } : { _id: param };
   const user = await User.findOne(field);
@@ -16,10 +15,9 @@ const findUser = async (param) => {
 
 /**
  * Adds a new user to the database
- * @param {string} param
+ * @param {string} user
  * @returns {object} a user object
  */
-
 const createUser = async (user) => {
   const newUser = await User.create({
     ...user
