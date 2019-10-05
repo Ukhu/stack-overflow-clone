@@ -18,7 +18,14 @@ servers:
 
 tags:
 - name: Auth
-  description: Authentication operations
+  description: Authentication routes
+- name: Question
+  description: Question routes
+- name: Answer
+  description: Answer routes
+
+security:
+- ApiKeyAuth: []
 
 paths:
   /auth/signup:
@@ -177,3 +184,192 @@ paths:
                   error:
                     type: string
                     example: error occured!
+  /questions:
+    post:
+      tags:
+        - Question
+      summary: Ask Question
+      description: Creates a new question in the database
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                body:
+                  type: string
+                tags:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        201:
+          description: request successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: successfully asked a question!
+                  data:
+                    type: object
+                    properties:
+                      _id: string
+                      tags:
+                        type: array
+                        items:
+                          type: string
+                      owner: string
+                      title: string
+                      body: string
+                      updatedAt: string
+                      createdAt: string
+        400:
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: object
+                    properties:
+                      body:
+                        type: object
+                        properties:
+                          title:
+                            type: string
+                          body:
+                            type: string
+                          tags:
+                            type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: string
+        404:
+          description: Entity not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: string          
+        500:
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: string
+                    example: error occured!
+  /questions/{questionId}/answers:
+    post:
+      tags:
+        - Answer
+      summary: Answer a question
+      description: Creates an answer to a question in the database
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                body:
+                  type: string
+      parameters:
+        - name: questionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        201:
+          description: request successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: successfully answered a question!
+                  data:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      owner:
+                        type: string
+                      body:
+                        type: string
+                      updatedAt:
+                        type: string
+                      createdAt:
+                        type: string
+        400:
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: object
+                    properties:
+                      body:
+                        type: object
+                        properties:
+                          title:
+                            type: string
+                          body:
+                            type: string
+                          tags:
+                            type: string
+
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: string
+        404:
+          description: Entity not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: string
+        500:
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: string
+                    example: error occured!
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      name: Authorization
+      in: header

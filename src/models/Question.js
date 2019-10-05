@@ -17,6 +17,10 @@ const questionSchema = new mongoose.Schema({
   tags: [{
     type: String,
     required: true
+  }],
+  answers: [{
+    type: mongoose.Types.ObjectId,
+    ref: 'Answer'
   }]
 });
 

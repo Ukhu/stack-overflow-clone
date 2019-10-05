@@ -103,4 +103,19 @@ export default class Validators {
       })
       .withMessage('a maximum of 5 tags are allowed');
   }
+
+  /**
+   * @method checkID
+   * @description validates the input in the id field
+   * @param {string} field
+   * @returns {function} call to the genericCheck validator
+   */
+  static checkID(field) {
+    return Validators.genericCheck(`${field}`)
+      .custom((value) => {
+        if (/^[a-fA-F0-9]{24}$/g.test(value)) return value;
+        return false;
+      })
+      .withMessage(`${field} must be a valid ID`);
+  }
 }

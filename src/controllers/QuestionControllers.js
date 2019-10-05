@@ -14,7 +14,7 @@ export default class QuestionControllers {
    * @description creates a new question in the database
    * @param {object} request
    * @param {object} response
-   * @returns {json} of user object
+   * @returns {json} object
    */
   static async askQuestion(request, response) {
     const { title, body, tags } = request.body;
