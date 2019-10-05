@@ -1,4 +1,9 @@
 export default {
+  demoUser: {
+    displayName: 'john',
+    email: 'john@gmail.com',
+    password: 'john1234'
+  },
   newUser: {
     displayName: 'eden',
     email: 'eden@gmail.com',
