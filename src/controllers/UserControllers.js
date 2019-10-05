@@ -1,9 +1,9 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import models from '../models';
+import services from '../services';
 import helpers from '../helpers';
 
-const { User } = models;
+const { userServices: { findUser, createUser } } = services;
 const { responseMessage } = helpers;
 
 /**
@@ -21,14 +21,14 @@ export default class UserControllers {
   static async signup(request, response) {
     const { displayName, email, password } = request.body;
     try {
-      const existingUser = await User.findOne({ email });
+      const existingUser = await findUser(email);
       if (existingUser) {
         return responseMessage(response, 409, {
           error: 'a user with the given email already exists'
         });
       }
       const hashedPassword = await bcrypt.hash(password, 10);
-      const newUser = await User.create({
+      const newUser = await createUser({
         displayName,
         email,
         password: hashedPassword
@@ -60,7 +60,7 @@ export default class UserControllers {
   static async login(request, response) {
     const { email, password } = request.body;
     try {
-      const user = await User.findOne({ email });
+      const user = await findUser(email);
       let match;
       if (user) match = await bcrypt.compare(password, user.password);
       if (!user || !match) return responseMessage(response, 401, { error: 'email or password is incorrect' });

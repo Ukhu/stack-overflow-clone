@@ -59,4 +59,48 @@ export default class Validators {
       .isAlphanumeric()
       .withMessage('password must be alphanumeric');
   }
+
+  /**
+   * @method checkTitle
+   * @description validates the input in the title field
+   * @returns {function} call to the genericCheck validator
+   */
+  static checkTitle() {
+    return Validators.genericCheck('title')
+      .trim()
+      .isLength({ min: 3, max: 100 })
+      .withMessage('title must be between 3 to 100 characters');
+  }
+
+  /**
+   * @method checkBody
+   * @description validates the input in the body field
+   * @returns {function} call to the genericCheck validator
+   */
+  static checkBody() {
+    return Validators.genericCheck('body')
+      .trim()
+      .isLength({ min: 3, max: 1024 })
+      .withMessage('body must be between 3 to 1024 characters');
+  }
+
+  /**
+   * @method checkTags
+   * @description validates the input in the tags field
+   * @returns {function} call to the genericCheck validator
+   */
+  static checkTags() {
+    return Validators.genericCheck('tags')
+      .optional()
+      .custom((value) => {
+        if (!Array.isArray(value)) return false;
+        return value;
+      })
+      .withMessage('tags must be grouped in an array')
+      .custom((value) => {
+        if (value.length > 5) return false;
+        return value;
+      })
+      .withMessage('a maximum of 5 tags are allowed');
+  }
 }
