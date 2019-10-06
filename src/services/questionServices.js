@@ -31,6 +31,51 @@ const findQuestion = async (id) => {
 };
 
 /**
+ * Finds a question a user has voted on
+ * @param {string} questionId
+ * @param {string} userId
+ * @returns {object} a question object
+ */
+const findVotedQuestion = async (questionId, userId) => {
+  const question = await Question.findOne({ _id: questionId, 'votes.voter': userId });
+  return question;
+};
+
+/**
+ * Inserts a new vote by a User into a question
+ * @param {string} questionId
+ * @param {string} userId
+ * @param {string} voteType
+ * @returns {object} a question object
+ */
+const insertVote = async (questionId, userId, voteType) => {
+  const vote = await Question.findByIdAndUpdate(questionId, {
+    $push: {
+      votes: {
+        voter: userId,
+        voteType
+      }
+    }
+  }, { useFindAndModify: false });
+  return vote;
+};
+
+/**
+ * Updates a users vote
+ * @param {string} questionId
+ * @param {string} userId
+ * @param {string} voteType
+ * @returns {null} null
+ */
+const updateVote = async (questionId, userId, voteType) => {
+  await Question.findOneAndUpdate({ _id: questionId, 'votes.voter': userId }, {
+    $set: {
+      'votes.$.voteType': voteType
+    }
+  }, { useFindAndModify: false });
+};
+
+/**
  * Gets questions in the database
  * @param {string} offset
  * @param {string} limit
@@ -63,6 +108,9 @@ const addAnswerToQuestion = async (id, answerId) => {
 
 export default {
   findQuestion,
+  findVotedQuestion,
+  insertVote,
+  updateVote,
   findAllQuestions,
   createQuestion,
   addAnswerToQuestion

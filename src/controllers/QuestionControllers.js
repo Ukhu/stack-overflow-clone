@@ -4,7 +4,12 @@ import models from '../models';
 
 const { Question } = models;
 const { responseMessage, extractQuestions } = helpers;
-const { questionServices: { createQuestion, findAllQuestions } } = services;
+const {
+  questionServices: {
+    createQuestion, findAllQuestions,
+    findVotedQuestion, insertVote, updateVote
+  }
+} = services;
 
 /**
  * @class QuestionControllers
@@ -62,6 +67,35 @@ export default class QuestionControllers {
         limit,
         data: questions
       });
+    } catch (error) {
+      responseMessage(response, 500, { error: error.message });
+    }
+  }
+
+  /**
+   * @method voteQuestion
+   * @description upvote or downvote a question
+   * @param {object} request
+   * @param {object} response
+   * @returns {json} object
+   */
+  static async voteQuestion(request, response) {
+    const { voteType } = request.query;
+    const { questionId } = request.params;
+    const { id } = request.user;
+    try {
+      const question = await findVotedQuestion(questionId, id);
+      if (!question) {
+        const vote = await insertVote(questionId, id, voteType);
+        if (!vote) return responseMessage(response, 404, { error: 'question not found!' });
+      } else {
+        const userVote = question.votes.filter((vote) => String(vote.voter) === id);
+        if (userVote[0].voteType === voteType) {
+          return responseMessage(response, 409, { message: `you have already ${voteType}voted this question` });
+        }
+        await updateVote(questionId, id, voteType);
+      }
+      responseMessage(response, 200, { message: `you have successfully ${voteType}voted this question` });
     } catch (error) {
       responseMessage(response, 500, { error: error.message });
     }

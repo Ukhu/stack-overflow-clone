@@ -21,6 +21,16 @@ const questionSchema = new mongoose.Schema({
   answers: [{
     type: mongoose.Types.ObjectId,
     ref: 'Answer'
+  }],
+  votes: [{
+    voter: {
+      type: mongoose.Types.ObjectId,
+      ref: 'User'
+    },
+    voteType: {
+      type: String,
+      required: true
+    }
   }]
 });
 

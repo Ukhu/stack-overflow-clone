@@ -5,9 +5,9 @@ import middlewares from '../middlewares';
 const question = express.Router();
 const QUESTION_URL = '/questions';
 
-const { askQuestion, viewQuestions } = QuestionController;
+const { askQuestion, viewQuestions, voteQuestion } = QuestionController;
 const {
-  QuestionValidators: { askQuestionValidators, viewQuestionsValidators },
+  QuestionValidators: { askQuestionValidators, viewQuestionsValidators, voteQuestionValidators },
   verifyToken
 } = middlewares;
 
@@ -16,5 +16,8 @@ question.post(`${QUESTION_URL}`, verifyToken, askQuestionValidators(), askQuesti
 
 // view questions route
 question.get(`${QUESTION_URL}`, verifyToken, viewQuestionsValidators(), viewQuestions);
+
+// upvote or downvote a question
+question.patch(`${QUESTION_URL}/:questionId/vote`, verifyToken, voteQuestionValidators(), voteQuestion);
 
 export default question;

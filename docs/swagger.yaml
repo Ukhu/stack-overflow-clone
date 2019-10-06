@@ -88,7 +88,7 @@ paths:
                             type: string
                             example: displayName must be alphanumeric
         409:
-          description: resource already exists
+          description: conflict
           content:
             application/json:
               schema:
@@ -434,7 +434,6 @@ paths:
                             type: string
                           tags:
                             type: string
-
         401:
           description: Unauthorized
           content:
@@ -453,6 +452,93 @@ paths:
                 properties: 
                   error:
                     type: string
+        500:
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: string
+                    example: error occured!
+  /questions/{questionId}/vote:
+    patch:
+      tags:
+        - Question
+      summary: Upvote or Downvote Question
+      description: Updates a question with an upvote or downvote
+      parameters:
+        - name: questionId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: voteType
+          in: query
+          required: true
+          schema:
+            type: string
+            example: down
+      responses:
+        201:
+          description: request successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: you have successfully upvoted this question
+        400:
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: object
+                    properties:
+                      params:
+                        type: object
+                        properties:
+                          questionId:
+                            type: string
+                      body:
+                        type: object
+                        properties:
+                          vote:
+                            type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: string
+        404:
+          description: Entity not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: string
+        409:
+          description: conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: string
+                    example: you have already upvoted this question
         500:
           description: internal server error
           content:
