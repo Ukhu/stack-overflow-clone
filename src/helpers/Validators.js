@@ -118,4 +118,16 @@ export default class Validators {
       })
       .withMessage(`${field} must be a valid ID`);
   }
+
+  /**
+   * @method checkNumber
+   * @description validates the input for fields containing numbers e.g page and limit
+   * @param {string} field
+   * @returns {function} call to the genericCheck validator
+   */
+  static checkNumber(field) {
+    return Validators.genericCheck(`${field}`)
+      .isInt({ allow_leading_zeroes: false })
+      .withMessage(`${field} must be a number`);
+  }
 }
