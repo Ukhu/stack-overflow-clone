@@ -275,6 +275,102 @@ paths:
                   error:
                     type: string
                     example: error occured!
+    get:
+      tags:
+        - Question
+      summary: View Questions
+      description: Gets all the questions in the database
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        200:
+          description: request successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: succesfully returned questions
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        owner:
+                          type: string
+                        title:
+                          type: string
+                        body:
+                          type: string
+                        tags:
+                          type: array
+                          items:
+                            type: string
+                        answers:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              body:
+                                type: string
+                              createdAt:
+                                type: string
+        400:
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: object
+                    properties:
+                      query:
+                        type: object
+                        properties:
+                          page:
+                            type: string
+                          limit:
+                            type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: string
+        404:
+          description: Entity not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: string          
+        500:
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: string
+                    example: error occured!
   /questions/{questionId}/answers:
     post:
       tags:

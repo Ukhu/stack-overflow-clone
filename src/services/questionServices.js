@@ -31,6 +31,21 @@ const findQuestion = async (id) => {
 };
 
 /**
+ * Gets questions in the database
+ * @param {string} offset
+ * @param {string} limit
+ * @returns {object} a questions object
+ */
+const findAllQuestions = async (offset, limit) => {
+  const questions = await Question.find({})
+    .populate('owner')
+    .populate('answers')
+    .skip(offset)
+    .limit(limit);
+  return questions;
+};
+
+/**
  * Updates a question with an answer
  * @param {string} id
  * @param {string} answerId
@@ -48,6 +63,7 @@ const addAnswerToQuestion = async (id, answerId) => {
 
 export default {
   findQuestion,
+  findAllQuestions,
   createQuestion,
   addAnswerToQuestion
 };

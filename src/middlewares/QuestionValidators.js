@@ -1,7 +1,11 @@
 import helpers from '../helpers';
 import validationErrorHandler from './validationErrorHandler';
 
-const { Validators: { checkTitle, checkBody, checkTags } } = helpers;
+const {
+  Validators: {
+    checkTitle, checkBody, checkTags, checkNumber
+  }
+} = helpers;
 
 /**
  * @class QuestionValidators
@@ -18,6 +22,19 @@ export default class QuestionValidators {
       checkTitle(),
       checkBody(),
       checkTags(),
+      validationErrorHandler
+    ];
+  }
+
+  /**
+   * @method viewQuestionsValidators
+   * @description validates the view questions fields
+   * @returns {array} of validation middlewares
+   */
+  static viewQuestionsValidators() {
+    return [
+      checkNumber('page').optional(),
+      checkNumber('limit').optional(),
       validationErrorHandler
     ];
   }
