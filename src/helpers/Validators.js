@@ -130,4 +130,15 @@ export default class Validators {
       .isInt({ allow_leading_zeroes: false })
       .withMessage(`${field} must be a number`);
   }
+
+  /**
+   * @method checkVote
+   * @description validates the input for voteType field
+   * @returns {function} call to the genericCheck validator
+   */
+  static checkVote() {
+    return Validators.genericCheck('voteType')
+      .isIn(['up', 'down'])
+      .withMessage('voteType must be either up or down');
+  }
 }

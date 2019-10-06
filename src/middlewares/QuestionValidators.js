@@ -3,7 +3,7 @@ import validationErrorHandler from './validationErrorHandler';
 
 const {
   Validators: {
-    checkTitle, checkBody, checkTags, checkNumber
+    checkTitle, checkBody, checkTags, checkNumber, checkVote, checkID
   }
 } = helpers;
 
@@ -35,6 +35,19 @@ export default class QuestionValidators {
     return [
       checkNumber('page').optional(),
       checkNumber('limit').optional(),
+      validationErrorHandler
+    ];
+  }
+
+  /**
+   * @method voteQuestionValidators
+   * @description validates the vote question fields
+   * @returns {array} of validation middlewares
+   */
+  static voteQuestionValidators() {
+    return [
+      checkID('questionId'),
+      checkVote(),
       validationErrorHandler
     ];
   }

@@ -24,6 +24,7 @@ const QUESTION_URL = `${BASE_URL}/questions`;
 
 
 let userToken;
+let questionId;
 
 describe('Question routes', () => {
   before((done) => {
@@ -44,6 +45,7 @@ describe('Question routes', () => {
         .send(newQuestion)
         .end((error, response) => {
           const { status, body } = response;
+          questionId = body.data._id;
           expect(status).to.equal(201);
           expect(body.message).to.equal('successfully asked a question!');
           expect(body.data).to.be.an('object');
@@ -146,6 +148,78 @@ describe('Question routes', () => {
         .post(QUESTION_URL)
         .set('authorization', userToken)
         .send(newQuestion)
+        .end((error, response) => {
+          expect(response).to.have.status(500);
+          expect(response.body).to.be.an('object');
+          expect(response.body.error).to.equal('error occured!');
+          stub.restore();
+          done();
+        });
+    });
+  });
+
+  describe('Upvote or Downvote Question PATCH "/questions/:questionId/vote', () => {
+    it('should successfully upvote a question', (done) => {
+      chai.request(app)
+        .patch(`${QUESTION_URL}/${questionId}/vote`)
+        .set('authorization', userToken)
+        .query({ voteType: 'up' })
+        .end((error, response) => {
+          const { status, body } = response;
+          expect(status).to.equal(200);
+          expect(body.message).to.equal('you have successfully upvoted this question');
+          done();
+        });
+    });
+
+    it('should return a conflict error if a user tries to upvote a question they have already upvoted', (done) => {
+      chai.request(app)
+        .patch(`${QUESTION_URL}/${questionId}/vote`)
+        .set('authorization', userToken)
+        .query({ voteType: 'up' })
+        .end((error, response) => {
+          const { status, body } = response;
+          expect(status).to.equal(409);
+          expect(body.message).to.equal('you have already upvoted this question');
+          done();
+        });
+    });
+
+    it('should return a 404 error if there is no question with the given id', (done) => {
+      chai.request(app)
+        .patch(`${QUESTION_URL}/123456789876543211234567/vote`)
+        .set('authorization', userToken)
+        .query({ voteType: 'up' })
+        .end((error, response) => {
+          const { status, body } = response;
+          expect(status).to.equal(404);
+          expect(body.error).to.equal('question not found!');
+          done();
+        });
+    });
+
+    it('should return a bad request error if the voteType is neither "up" nor "down"', (done) => {
+      chai.request(app)
+        .patch(`${QUESTION_URL}/${questionId}/vote`)
+        .set('authorization', userToken)
+        .query({ voteType: 'notUpNorDown' })
+        .end((error, response) => {
+          const { status, body } = response;
+          expect(status).to.equal(400);
+          expect(body.error).to.be.an('object');
+          expect(body.error.query).to.be.an('object');
+          expect(body.error.query.voteType).to.equal('voteType must be either up or down');
+          done();
+        });
+    });
+
+    it('should return a failure response if a server error occurs', (done) => {
+      const stub = sinon.stub(Question, 'findOne');
+      stub.throws(new Error('error occured!'));
+      chai.request(app)
+        .patch(`${QUESTION_URL}/${questionId}/vote`)
+        .set('authorization', userToken)
+        .query({ voteType: 'up' })
         .end((error, response) => {
           expect(response).to.have.status(500);
           expect(response.body).to.be.an('object');
