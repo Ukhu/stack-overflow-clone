@@ -11,7 +11,8 @@ const { User } = models;
 const {
   mockUser: {
     newUser, sameEmailUser, invalidInputUser,
-    loginUser, nonExistentEmail, wrongPassword
+    loginUser, nonExistentEmail, wrongPassword,
+    sameDisplayName
   }
 } = mocks;
 
@@ -42,7 +43,19 @@ describe('Auth routes', () => {
         .end((error, response) => {
           const { status, body } = response;
           expect(status).to.equal(409);
-          expect(body.error).to.equal('a user with the given email already exists');
+          expect(body.error).to.equal('email already exists');
+          done();
+        });
+    });
+
+    it('should not accept an already existent displayName', (done) => {
+      chai.request(app)
+        .post(SIGNUP_URL)
+        .send(sameDisplayName)
+        .end((error, response) => {
+          const { status, body } = response;
+          expect(status).to.equal(409);
+          expect(body.error).to.equal('displayName already exists');
           done();
         });
     });

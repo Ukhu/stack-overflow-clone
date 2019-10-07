@@ -3,13 +3,22 @@ import models from '../models';
 const { User } = models;
 
 /**
- * Finds a user from the database by email or id
+ * Finds a user from the database by email, id, or displayName
  * @param {string} param
  * @returns {object} a user object
  */
 const findUser = async (param) => {
-  const field = (/@/g.test(param)) ? { email: param } : { _id: param };
-  const user = await User.findOne(field);
+  let user;
+  if (/^[a-fA-F0-9]{24}$/g.test(param)) {
+    user = await User.findById(param);
+  } else {
+    user = await User.findOne({
+      $or: [
+        { email: param },
+        { displayName: param }
+      ]
+    });
+  }
   return user;
 };
 
@@ -25,7 +34,20 @@ const createUser = async (user) => {
   return newUser;
 };
 
+/**
+ * Searches for a user in the database
+ * @param {string} query
+ * @returns {object} a user object
+ */
+const searchUsers = async (query) => {
+  const foundUser = await User.find({
+    displayName: new RegExp(query, 'i')
+  });
+  return foundUser;
+};
+
 export default {
   findUser,
+  searchUsers,
   createUser
 };

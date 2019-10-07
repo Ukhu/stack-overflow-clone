@@ -9,6 +9,11 @@ export default {
     email: 'kenn@gmail.com',
     password: 'kenn1234'
   },
+  demoUser3: {
+    displayName: 'matt',
+    email: 'matt@gmail.com',
+    password: 'matt1234'
+  },
   newUser: {
     displayName: 'eden',
     email: 'eden@gmail.com',
@@ -17,6 +22,11 @@ export default {
   sameEmailUser: {
     displayName: 'jack',
     email: 'eden@gmail.com',
+    password: 'jack1234'
+  },
+  sameDisplayName: {
+    displayName: 'eden',
+    email: 'asdsdfdsf@gmail.com',
     password: 'jack1234'
   },
   invalidInputUser: {
