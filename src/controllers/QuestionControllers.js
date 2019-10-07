@@ -3,7 +3,7 @@ import services from '../services';
 import models from '../models';
 
 const { Question } = models;
-const { responseMessage, extractQuestions } = helpers;
+const { responseMessage } = helpers;
 const {
   questionServices: {
     createQuestion, findAllQuestions,
@@ -58,8 +58,7 @@ export default class QuestionControllers {
         return responseMessage(response, 404, { error: 'page not found' });
       }
       const offset = limit * (page - 1);
-      const results = await findAllQuestions(offset, Number(limit));
-      const questions = extractQuestions(results);
+      const questions = await findAllQuestions(offset, Number(limit));
       response.status(200).json({
         message: 'succesfully returned questions',
         currentPage: page,

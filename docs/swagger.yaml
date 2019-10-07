@@ -184,6 +184,81 @@ paths:
                   error:
                     type: string
                     example: error occured!
+  /search:
+    get:
+      tags:
+        - User
+      summary: Search
+      description: Search for questions, answers or authors in the database
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+        - name: value
+          in: query
+          schema:
+            type: string
+      responses:
+        200:
+          description: request successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: succesfully returned questions, answers or users
+                  data:
+                    type: array
+                    items:
+                      type: object
+        400:
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: object
+                    properties:
+                      query:
+                        type: object
+                        properties:
+                          type:
+                            type: string
+                          value:
+                            type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: string
+        404:
+          description: Entity not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: string          
+        500:
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: string
+                    example: error occured!
   /questions:
     post:
       tags:

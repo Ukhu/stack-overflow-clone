@@ -141,4 +141,15 @@ export default class Validators {
       .isIn(['up', 'down'])
       .withMessage('voteType must be either up or down');
   }
+
+  /**
+   * @method checkSearchType
+   * @description validates the input for type field for searches
+   * @returns {function} call to the genericCheck validator
+   */
+  static checkSearchType() {
+    return Validators.genericCheck('type')
+      .isIn(['questions', 'answers', 'users'])
+      .withMessage('search type must be either questions, answers or users');
+  }
 }

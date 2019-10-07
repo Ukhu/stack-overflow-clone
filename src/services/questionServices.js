@@ -1,6 +1,8 @@
 import models from '../models';
+import helpers from '../helpers';
 
 const { Question } = models;
+const { extractQuestions } = helpers;
 
 /**
  * Creates a new question in the database
@@ -82,11 +84,30 @@ const updateVote = async (questionId, userId, voteType) => {
  * @returns {object} a questions object
  */
 const findAllQuestions = async (offset, limit) => {
-  const questions = await Question.find({})
+  const results = await Question.find({})
     .populate('owner')
     .populate('answers')
     .skip(offset)
     .limit(limit);
+  const questions = extractQuestions(results);
+  return questions;
+};
+
+/**
+ * Searches for a question in the database
+ * @param {string} query
+ * @returns {object} a questions object
+ */
+const searchQuestions = async (query) => {
+  const results = await Question.find({
+    $or: [
+      { title: new RegExp(query, 'i') },
+      { tags: new RegExp(`^${query}$`, 'i') }
+    ]
+  })
+    .populate('owner')
+    .populate('answers');
+  const questions = extractQuestions(results);
   return questions;
 };
 
@@ -112,6 +133,7 @@ export default {
   insertVote,
   updateVote,
   findAllQuestions,
+  searchQuestions,
   createQuestion,
   addAnswerToQuestion
 };

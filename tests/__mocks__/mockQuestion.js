@@ -4,6 +4,11 @@ export default {
     body: 'I want to know what the best language is',
     tags: ['javascript', 'python']
   },
+  demoQuestion2: {
+    title: 'Javascript or python, which is better',
+    body: 'I want to know the better of javascript and python',
+    tags: ['javascript', 'python']
+  },
   newQuestion: {
     title: 'What is today\'s date?',
     body: 'I would like to know today\'s date',

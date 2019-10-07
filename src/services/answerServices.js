@@ -16,6 +16,21 @@ const createAnswer = async (id, body) => {
   return newAnswer;
 };
 
+/**
+ * Searches for an answer in the database
+ * @param {string} query
+ * @returns {object} an answers object
+ */
+const searchAnswers = async (query) => {
+  const answers = await Answer.find({
+    $or: [
+      { body: new RegExp(query, 'i') },
+    ]
+  });
+  return answers;
+};
+
 export default {
-  createAnswer
+  createAnswer,
+  searchAnswers
 };

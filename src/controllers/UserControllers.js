@@ -3,7 +3,17 @@ import jwt from 'jsonwebtoken';
 import services from '../services';
 import helpers from '../helpers';
 
-const { userServices: { findUser, createUser } } = services;
+const {
+  userServices: {
+    findUser, createUser, searchUsers
+  },
+  questionServices: {
+    searchQuestions
+  },
+  answerServices: {
+    searchAnswers
+  }
+} = services;
 const { responseMessage } = helpers;
 
 /**
@@ -21,17 +31,13 @@ export default class UserControllers {
   static async signup(request, response) {
     const { displayName, email, password } = request.body;
     try {
-      const existingUser = await findUser(email);
-      if (existingUser) {
-        return responseMessage(response, 409, {
-          error: 'a user with the given email already exists'
-        });
-      }
+      const existingEmail = await findUser(email);
+      if (existingEmail) return responseMessage(response, 409, { error: 'email already exists' });
+      const existingDisplayName = await findUser(displayName);
+      if (existingDisplayName) return responseMessage(response, 409, { error: 'displayName already exists' });
       const hashedPassword = await bcrypt.hash(password, 10);
       const newUser = await createUser({
-        displayName,
-        email,
-        password: hashedPassword
+        displayName, email, password: hashedPassword
       });
       const token = jwt.sign({ id: newUser.id }, process.env.SECRET_KEY, { expiresIn: '24h' });
       responseMessage(response, 201, {
@@ -73,6 +79,44 @@ export default class UserControllers {
           displayName: user.displayName,
           token
         }
+      });
+    } catch (error) {
+      responseMessage(response, 500, {
+        error: error.message
+      });
+    }
+  }
+
+  /**
+   * @method search
+   * @description search the database for a question, answer or user
+   * @param {object} request
+   * @param {object} response
+   * @returns {json} of user object
+   */
+  static async search(request, response) {
+    const { type, value } = request.query;
+    try {
+      let results;
+      switch (type) {
+        case 'questions':
+          results = await searchQuestions(value);
+          break;
+        case 'answers':
+          results = await searchAnswers(value);
+          break;
+        case 'users':
+          results = await searchUsers(value);
+          break;
+        default:
+          break;
+      }
+      if (results.length < 1) {
+        return responseMessage(response, 404, { message: `no ${type} found`, data: [] });
+      }
+      responseMessage(response, 200, {
+        message: `successfully returned ${type}`,
+        data: results
       });
     } catch (error) {
       responseMessage(response, 500, {
