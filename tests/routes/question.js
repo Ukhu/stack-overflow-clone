@@ -327,4 +327,59 @@ describe('Question routes', () => {
         });
     });
   });
+
+  describe('View Single Question GET "/question/:questionId"', () => {
+    it('should successfully return a single question', (done) => {
+      chai.request(app)
+        .get(`${QUESTION_URL}/${questionId}`)
+        .set('authorization', userToken)
+        .end((error, response) => {
+          expect(response).to.have.status(200);
+          expect(response.body.message).to.equal('successfully returned question');
+          expect(response.body.data.length).to.equal(1);
+          done();
+        });
+    });
+
+    it('should return a 404 response if the question is not found', (done) => {
+      chai.request(app)
+        .get(`${QUESTION_URL}/12345678987654321efefefe`)
+        .set('authorization', userToken)
+        .end((error, response) => {
+          expect(response).to.have.status(404);
+          expect(response.body.error).to.equal('question not found!');
+          done();
+        });
+    });
+
+    it('should return a bad request error if the questionId is not valid', (done) => {
+      chai.request(app)
+        .get(`${QUESTION_URL}/invalidQuestionId`)
+        .set('authorization', userToken)
+        .end((error, response) => {
+          const { status, body } = response;
+          expect(status).to.equal(400);
+          expect(body.error).to.be.an('object');
+          expect(body.error.params).to.be.an('object');
+          expect(body.error.params.questionId).to.equal('questionId must be a valid ID');
+          done();
+        });
+    });
+
+    it('should return a failure response if a server error occurs', (done) => {
+      const stub = sinon.stub(Question, 'findById');
+      stub.throws(new Error('error occured!'));
+      chai.request(app)
+        .get(`${QUESTION_URL}/${questionId}`)
+        .set('authorization', userToken)
+        .send(newQuestion)
+        .end((error, response) => {
+          expect(response).to.have.status(500);
+          expect(response.body).to.be.an('object');
+          expect(response.body.error).to.equal('error occured!');
+          stub.restore();
+          done();
+        });
+    });
+  });
 });

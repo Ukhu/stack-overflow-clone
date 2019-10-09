@@ -388,6 +388,10 @@ paths:
                           type: string
                         body:
                           type: string
+                        upvotes:
+                          type: number
+                        downvotes:
+                          type: number
                         tags:
                           type: array
                           items:
@@ -436,6 +440,102 @@ paths:
                 properties: 
                   error:
                     type: string          
+        500:
+          description: internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: string
+                    example: error occured!
+  /questions/{questionId}:
+    get:
+      tags:
+        - Question
+      summary: View single question
+      description: Fetches a single question from the database
+      parameters:
+        - name: questionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: request successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: successfully returned question
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        owner:
+                          type: string
+                        title:
+                          type: string
+                        body:
+                          type: string
+                        upvotes:
+                          type: number
+                        downvotes:
+                          type: number
+                        tags:
+                          type: array
+                          items:
+                            type: string
+                        answers:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              body:
+                                type: string
+                              createdAt:
+                                type: string
+        400:
+          description: bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: object
+                    properties:
+                      param:
+                        type: object
+                        properties:
+                          questionId:
+                            type: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: string
+        404:
+          description: Entity not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  error:
+                    type: string
         500:
           description: internal server error
           content:

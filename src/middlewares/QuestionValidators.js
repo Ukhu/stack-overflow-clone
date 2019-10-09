@@ -40,6 +40,18 @@ export default class QuestionValidators {
   }
 
   /**
+   * @method singleQuestionValidators
+   * @description validates the fields for viewing a single question
+   * @returns {array} of validation middlewares
+   */
+  static singleQuestionValidators() {
+    return [
+      checkID('questionId'),
+      validationErrorHandler
+    ];
+  }
+
+  /**
    * @method voteQuestionValidators
    * @description validates the vote question fields
    * @returns {array} of validation middlewares

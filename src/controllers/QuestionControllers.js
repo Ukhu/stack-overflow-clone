@@ -6,7 +6,7 @@ const { Question } = models;
 const { responseMessage } = helpers;
 const {
   questionServices: {
-    createQuestion, findAllQuestions,
+    createQuestion, findQuestion, findAllQuestions,
     findVotedQuestion, insertVote, updateVote
   }
 } = services;
@@ -65,6 +65,27 @@ export default class QuestionControllers {
         totalPages: pages,
         limit,
         data: questions
+      });
+    } catch (error) {
+      responseMessage(response, 500, { error: error.message });
+    }
+  }
+
+  /**
+   * @method viewSingleQuestion
+   * @description view a single question
+   * @param {object} request
+   * @param {object} response
+   * @returns {json} object
+   */
+  static async viewSingleQuestion(request, response) {
+    const { questionId } = request.params;
+    try {
+      const question = await findQuestion(questionId);
+      if (!question) return responseMessage(response, 404, { error: 'question not found!' });
+      responseMessage(response, 200, {
+        message: 'successfully returned question',
+        data: question
       });
     } catch (error) {
       responseMessage(response, 500, { error: error.message });

@@ -7,7 +7,7 @@ import mocks from '../__mocks__';
 
 chai.use(chaiHttp);
 
-const { Answer } = models;
+const { Question } = models;
 const {
   mockQuestion: { demoQuestion },
   mockUser: { demoUser2 },
@@ -24,7 +24,7 @@ const QUESTION_URL = `${BASE_URL}/questions`;
 let ANSWER_URL;
 let userToken;
 
-describe('Question routes', () => {
+describe('Answer question route', () => {
   before((done) => {
     chai.request(app)
       .post(SIGNUP_URL)
@@ -93,7 +93,7 @@ describe('Question routes', () => {
     });
 
     it('should return a failure response if a server error occurs', (done) => {
-      const stub = sinon.stub(Answer, 'create');
+      const stub = sinon.stub(Question, 'findById');
       stub.throws(new Error('error occured!'));
       chai.request(app)
         .post(ANSWER_URL)
