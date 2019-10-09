@@ -14,7 +14,7 @@ externalDocs:
 
 servers:
 - url: /api/v1
-  description: Local host
+  description: Host
 
 tags:
 - name: Auth

@@ -4,7 +4,10 @@
   "description": "simple clone of stackoverflow with basic features",
   "main": "index.js",
   "scripts": {
+    "build": "babel ./src -d dist",
+    "start": "node dist/index.js",
     "start:dev": "cross-env DEBUG=dev nodemon --exec babel-node ./src/index.js",
+    "heroku-postbuild": "npm run build",
     "test": "cross-env NODE_ENV=test nyc mocha --require @babel/register --recursive tests --timeout 20000 --exit",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
