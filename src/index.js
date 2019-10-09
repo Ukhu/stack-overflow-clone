@@ -14,7 +14,16 @@ dotenv.config();
 const app = express();
 
 const PORT = process.env.PORT || 3000;
-const DB_URL = process.env.NODE_ENV === 'development' ? process.env.MONGODB_URI : process.env.MONGODB_URI_TEST;
+
+let DB_URI;
+if (process.env.NODE_ENV === 'development') {
+  DB_URI = process.env.MONGODB_URI;
+} else if (process.env.NODE_ENV === 'test') {
+  DB_URI = process.env.MONGODB_URI_TEST;
+} else {
+  DB_URI = process.env.MONGODB_URI_PROD;
+}
+
 const log = debug('dev');
 
 // Express Middlewares
@@ -37,7 +46,7 @@ app.use('*', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  mongoose.connect(DB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
+  mongoose.connect(DB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 });
 
 const db = mongoose.connection;
