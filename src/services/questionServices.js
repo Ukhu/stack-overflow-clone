@@ -29,7 +29,11 @@ const createQuestion = async (id, title, body, tags) => {
  */
 const findQuestion = async (id) => {
   const foundQuestion = await Question.findById(id);
-  return foundQuestion;
+  let question = foundQuestion;
+  if (foundQuestion) {
+    question = extractQuestions([foundQuestion]);
+  }
+  return question;
 };
 
 /**
