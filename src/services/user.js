@@ -23,6 +23,20 @@ const findUser = async (param) => {
 };
 
 /**
+ * checks if a user exists in the database
+ * @param {string} email
+ * @param {string} displayName
+ * @returns {object} if user exists
+ */
+const checkIfUserExists = async (email, displayName) => {
+  const existingEmail = await findUser(email);
+  if (existingEmail) return { error: 'email already exists' };
+  const existingDisplayName = await findUser(displayName);
+  if (existingDisplayName) return { error: 'displayName already exists' };
+  return false;
+};
+
+/**
  * Adds a new user to the database
  * @param {string} user
  * @returns {object} a user object
@@ -40,14 +54,13 @@ const createUser = async (user) => {
  * @returns {object} a user object
  */
 const searchUsers = async (query) => {
-  const foundUser = await User.find({
-    displayName: new RegExp(query, 'i')
-  });
+  const foundUser = await User.find({ displayName: new RegExp(query, 'i') });
   return foundUser;
 };
 
 export default {
   findUser,
+  checkIfUserExists,
   searchUsers,
   createUser
 };

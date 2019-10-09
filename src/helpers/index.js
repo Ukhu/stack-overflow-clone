@@ -1,4 +1,4 @@
-import Validators from './Validators';
+import * as Validators from './validationHelpers';
 import responseMessage from './responseMessage';
 import extractQuestions from './extractQuestions';
 

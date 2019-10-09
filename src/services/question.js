@@ -6,15 +6,15 @@ const { extractQuestions } = helpers;
 
 /**
  * Creates a new question in the database
- * @param {string} id
+ * @param {string} ownerId
  * @param {string} title
  * @param {string} body
  * @param {string} tags
  * @returns {object} a question object
  */
-const createQuestion = async (id, title, body, tags) => {
+const createQuestion = async (ownerId, title, body, tags) => {
   const newQuestion = await Question.create({
-    owner: id,
+    owner: ownerId,
     title,
     body,
     tags: tags ? [...tags] : []
@@ -24,11 +24,11 @@ const createQuestion = async (id, title, body, tags) => {
 
 /**
  * Finds a question in the database
- * @param {string} id
+ * @param {string} questionId
  * @returns {object} a question object
  */
-const findQuestion = async (id) => {
-  const foundQuestion = await Question.findById(id);
+const findQuestion = async (questionId) => {
+  const foundQuestion = await Question.findById(questionId);
   let question = foundQuestion;
   if (foundQuestion) {
     question = extractQuestions([foundQuestion]);
@@ -117,12 +117,12 @@ const searchQuestions = async (query) => {
 
 /**
  * Updates a question with an answer
- * @param {string} id
+ * @param {string} questionId
  * @param {string} answerId
  * @returns {undefined}
  */
-const addAnswerToQuestion = async (id, answerId) => {
-  await Question.findByIdAndUpdate(id, {
+const addAnswerToQuestion = async (questionId, answerId) => {
+  await Question.findByIdAndUpdate(questionId, {
     $push: {
       answers: answerId
     }

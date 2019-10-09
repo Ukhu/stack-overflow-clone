@@ -1,6 +1,6 @@
-import userServices from './userServices';
-import questionServices from './questionServices';
-import answerServices from './answerServices';
+import userServices from './user';
+import questionServices from './question';
+import answerServices from './answer';
 
 export default {
   userServices,

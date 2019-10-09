@@ -22,7 +22,7 @@ const SEARCH_URL = `${BASE_URL}/search`;
 let ANSWER_URL;
 let userToken;
 
-describe('User routes', () => {
+describe('Search routes', () => {
   before((done) => {
     chai.request(app)
       .post(SIGNUP_URL)
