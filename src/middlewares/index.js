@@ -1,13 +1,13 @@
-import AuthValidators from './AuthValidators';
-import UserValidators from './UserValidators';
-import QuestionValidators from './QuestionValidators';
-import AnswerValidators from './AnswerValidators';
+import * as AuthValidators from './authValidators';
+import SearchValidators from './searchValidators';
+import * as QuestionValidators from './questionValidators';
+import AnswerValidators from './answerValidators';
 import validationErrorHandler from './validationErrorHandler';
 import verifyToken from './verifyToken';
 
 export default {
   AuthValidators,
-  UserValidators,
+  SearchValidators,
   QuestionValidators,
   AnswerValidators,
   validationErrorHandler,

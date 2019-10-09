@@ -1,11 +1,11 @@
 import express from 'express';
-import UserController from '../controllers/UserControllers';
+import * as AuthControllers from '../controllers/auth';
 import middlewares from '../middlewares';
 
 const auth = express.Router();
 const AUTH_URL = '/auth';
 
-const { signup, login } = UserController;
+const { signup, login } = AuthControllers;
 const { AuthValidators: { signupValidators, loginValidators } } = middlewares;
 
 // sign up route
